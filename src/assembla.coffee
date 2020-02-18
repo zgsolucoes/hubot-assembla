@@ -62,7 +62,7 @@ api_call = (msg, call, cb, params="", action="get", data_body="") ->
               .header('User-Agent', "Hubot/#{@version}")
               .get() (err, res, body) ->
                 response = JSON.parse(body)
-                cb response
+                cb response, err
           when 'delete'
             msg.robot.http("https://api.assembla.com/v1/#{call}.json?#{params}")
               .header('accept', 'application/json')
@@ -70,7 +70,7 @@ api_call = (msg, call, cb, params="", action="get", data_body="") ->
               .header('User-Agent', "Hubot/#{@version}")
               .delete() (err, res, body) ->
                 response = JSON.parse(body)
-                cb response
+                cb response, err
           when 'post'
             msg.robot.http("https://api.assembla.com/v1/#{call}.json")
               .header('accept', 'application/json')
@@ -79,7 +79,7 @@ api_call = (msg, call, cb, params="", action="get", data_body="") ->
               .post(data_body) (err, res, body) ->
                 if body != " "
                   response = JSON.parse(body)
-                cb response
+                cb response, err
           when 'put'
             msg.robot.http("https://api.assembla.com/v1/#{call}.json?#{params}")
               .header('accept', 'application/json')
@@ -88,7 +88,7 @@ api_call = (msg, call, cb, params="", action="get", data_body="") ->
               .put(data_body) (err, res, body) ->
                 if body != ""
                   response = JSON.parse(body)
-                cb response
+                cb response, err
 
 find_space_tool_for_mr = (msg, id, space, st_cb) ->
   api_call msg, "spaces/#{space}/space_tools/repo", (data) ->
