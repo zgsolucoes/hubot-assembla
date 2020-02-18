@@ -41,7 +41,7 @@ SSH_DEPLOY_ACTION_ID = process.env.HUBOT_ASSEMBLA_DEPLOY_ACTION_ID
 api_app_id = process.env.HUBOT_ASSEMBLA_API_APP_ID
 api_app_secret = process.env.HUBOT_ASSEMBLA_API_APP_SECRET
 
-api_call = (msg, call, cb, params="", action="get", data_body="") ->
+api_call = (msg, call, cb, params="", action="get", data_body="", content_type ="") ->
   user_id = msg.envelope.user.id
   refresh_token = msg.robot.brain.data.users[user_id].assembla_refresh_token
   msg.robot.http("https://#{api_app_id}:#{api_app_secret}@api.assembla.com/token?grant_type=refresh_token&refresh_token=#{refresh_token}")
@@ -74,6 +74,7 @@ api_call = (msg, call, cb, params="", action="get", data_body="") ->
           when 'post'
             msg.robot.http("https://api.assembla.com/v1/#{call}.json")
               .header('accept', 'application/json')
+              .header('Content-Type', content_type)
               .header('Authorization', "Bearer #{access_token}")
               .header('User-Agent', "Hubot/#{@version}")
               .post(data_body) (err, res, body) ->
@@ -83,6 +84,7 @@ api_call = (msg, call, cb, params="", action="get", data_body="") ->
           when 'put'
             msg.robot.http("https://api.assembla.com/v1/#{call}.json?#{params}")
               .header('accept', 'application/json')
+              .header('Content-Type', content_type)
               .header('Authorization', "Bearer #{access_token}")
               .header('User-Agent', "Hubot/#{@version}")
               .put(data_body) (err, res, body) ->
